@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     #change size to change resolution: size need to be 1x1 proportion and only 2^x numbers allowed
     frames = video_splitter.load_video_frames(video_path, size=(512,512), max_frames=None, frame_skip=1)
-    #Higher resolutions require more computational power
+    #Higher resolutions require more computational power ff
     
     encoded_frames = []
     for frame in frames:

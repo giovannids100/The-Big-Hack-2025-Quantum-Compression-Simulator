@@ -1,4 +1,5 @@
 import image_compressor as comp
+import pennylane_test as pl
 import video_splitter
 import video_reconstructor
 
@@ -16,16 +17,27 @@ if __name__ == "__main__":
 
     video_path = r"./video.mp4"
 
-    frames = video_splitter.load_video_frames(video_path, size=(2560, 1440), max_frames=None, frame_skip=1)
+    frames = video_splitter.load_video_frames(video_path, size=(16, 16), max_frames=None, frame_skip=1)
     compressed_frames = []
 
 
+    # for f in frames:   
+    #     if f is not None:
+    #         circuit, encoded_amplitudes = comp.amplitude_encode(f)
+    #         compressed_amplitudes = comp.quantum_compression_technique_1(encoded_amplitudes)
+    #         compressed_image = comp.reconstruct_image(compressed_amplitudes, f.shape)
+    #         comp.visualize_images(f, encoded_amplitudes, compressed_amplitudes)
+    #         compressed_frames.append(compressed_image)
+    #     else:
+    #         print("Failed to load image, exiting the program.")
+
     for f in frames:   
         if f is not None:
-            circuit, encoded_amplitudes = comp.amplitude_encode(f)
-            compressed_amplitudes = comp.quantum_compression_technique_1(encoded_amplitudes)
-            compressed_image = comp.reconstruct_image(compressed_amplitudes, f.shape)
-            compressed_frames.append(compressed_image)
+            circuit, data, state, qubits = pl.encode_image_from_array(
+                    f,
+                    use_color=True
+                )
+            compressed_frames.append(data)
         else:
             print("Failed to load image, exiting the program.")
     

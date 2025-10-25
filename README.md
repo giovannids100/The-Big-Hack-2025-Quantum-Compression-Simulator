@@ -1,4 +1,4 @@
-# THE BIG HACK
+# THE BIG HACK 2025
 # 🎬 Quantum Video Compression Simulator
 
 A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages both **Qiskit** and **PennyLane** quantum frameworks to demonstrate quantum information processing on multimedia data.

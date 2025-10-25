@@ -118,7 +118,7 @@ def reconstruct_video_with_original_fps(frames_list, output_path, original_video
             print(f"Using FPS from original video: {fps:.2f}")
         
         # Reconstruct video
-        return reconstruct_video(frames_list, output_path, fps=fps)
+        return fps,len(frames_list),reconstruct_video(frames_list, output_path, fps=fps)
     
     except Exception as e:
         print(f"Error: {e}")

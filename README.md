@@ -5,7 +5,7 @@
 **Giovanni Di Stazio**
 **Francesca Morra**
 
-A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages both **Qiskit** and **PennyLane** quantum frameworks to demonstrate quantum information processing on multimedia data.
+A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages **PennyLane** quantum framework to demonstrate quantum information processing on multimedia data.
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![Qiskit](https://img.shields.io/badge/Qiskit-1.0+-purple.svg)

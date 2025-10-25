@@ -5,7 +5,20 @@ import matplotlib.pyplot as plt
 import os
 
 def prepare_image_data(image_path, target_size=(8, 8), use_color=False):
-
+    """
+    Load and preprocess an image for quantum encoding.
+    
+    Args:
+        image_path: Path to image file
+        target_size: Resize image to this size (width, height)
+                    For amplitude encoding, total pixels should be ≤ 2^20 (~1M)
+                    Recommended: (4,4)=16, (8,8)=64, (16,16)=256
+        use_color: If True, preserve RGB channels. If False, convert to grayscale.
+                   WARNING: Color images need 3x more qubits!
+    
+    Returns:
+        Normalized flattened image array, original image, and normalization factor
+    """
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image not found: {image_path}")
     
@@ -30,17 +43,19 @@ def prepare_image_data(image_path, target_size=(8, 8), use_color=False):
     img = img.resize(target_size, Image.Resampling.LANCZOS)
     
     # Convert to numpy array and flatten
-    img_array = np.array(img).flatten()
+    img_array = np.array(img).flatten().astype(float)
     
     print(f"Total values: {len(img_array)} ({'3 channels' if use_color else '1 channel'})")
     print(f"Qubits needed: {int(np.ceil(np.log2(len(img_array))))} qubits")
     
-    # Normalize to unit vector (required for amplitude encoding)
-    norm = np.linalg.norm(img_array)
-    if norm > 0:
-        img_array = img_array / norm
+    # Store the original norm for reconstruction
+    original_norm = np.linalg.norm(img_array)
     
-    return img_array, np.array(img), np.array(original_img.convert('RGB' if use_color else 'L'))
+    # Normalize to unit vector (required for amplitude encoding)
+    if original_norm > 0:
+        img_array = img_array / original_norm
+    
+    return img_array, np.array(img), np.array(original_img.convert('RGB' if use_color else 'L')), original_norm
 
 def amplitude_encode_image(image_data):
     """
@@ -92,13 +107,25 @@ def verify_encoding(original_data, quantum_state):
     return amplitudes
 
 def encode_image_from_file(image_path, target_size=(8, 8), use_color=False):
-
+    """
+    Complete pipeline: Load image from file and encode it.
+    
+    Args:
+        image_path: Path to your image file (jpg, png, etc.)
+        target_size: Tuple (width, height) for resizing
+                    Examples: (4,4)=16px, (8,8)=64px, (16,16)=256px, (32,32)=1024px
+        use_color: If True, encode RGB color channels (3x more qubits!)
+                   If False, convert to grayscale (1 channel)
+    
+    Returns:
+        circuit, image data, quantum state, and reconstructed image
+    """
     print("="*70)
     print(f"ENCODING IMAGE: {os.path.basename(image_path)}")
     print("="*70)
     
     # Load and preprocess
-    image_data, resized_img, original_img = prepare_image_data(image_path, target_size, use_color)
+    image_data, resized_img, original_img, original_norm = prepare_image_data(image_path, target_size, use_color)
     
     # Encode in quantum circuit
     circuit, n_qubits = amplitude_encode_image(image_data)
@@ -113,39 +140,125 @@ def encode_image_from_file(image_path, target_size=(8, 8), use_color=False):
     # Verify encoding
     verify_encoding(image_data, quantum_state)
     
-    # Visualize
-    visualize_encoding(original_img, resized_img, image_data, quantum_state, n_qubits, use_color)
+    # Visualize with reconstruction
+    reconstructed_img = visualize_encoding(original_img, resized_img, image_data, quantum_state, n_qubits, use_color, original_norm)
     
-    return circuit, image_data, quantum_state
+    return circuit, image_data, quantum_state, reconstructed_img
 
-def visualize_encoding(original_img, resized_img, image_data, quantum_state, n_qubits, use_color=False):
+def reconstruct_image_from_quantum_state(quantum_state, original_shape, use_color=False, original_norm=1.0):
     """
-    Visualize the encoding process - simplified to show only before and after images.
+    Reconstruct the image from quantum state amplitudes.
+    This shows what the quantum circuit actually stores!
+    
+    Args:
+        quantum_state: The quantum state vector
+        original_shape: Shape of the target image (height, width) or (height, width, channels)
+        use_color: Whether this is a color image
+        original_norm: The normalization factor used (to denormalize)
+    
+    Returns:
+        Reconstructed image as numpy array
     """
-    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+    # Extract amplitudes from quantum state
+    amplitudes = np.abs(quantum_state)
+    
+    # Calculate how many values we need
+    if use_color:
+        num_values = original_shape[0] * original_shape[1] * 3
+    else:
+        num_values = original_shape[0] * original_shape[1]
+    
+    # Take only the values we need (rest is padding)
+    reconstructed_data = amplitudes[:num_values]
+    
+    # Denormalize (reverse the normalization we did earlier)
+    reconstructed_data = reconstructed_data * original_norm
+    
+    # Reshape back to image format
+    if use_color:
+        reconstructed_img = reconstructed_data.reshape(original_shape[0], original_shape[1], 3)
+    else:
+        reconstructed_img = reconstructed_data.reshape(original_shape[0], original_shape[1])
+    
+    # Clip to valid pixel range [0, 255]
+    reconstructed_img = np.clip(reconstructed_img, 0, 255)
+    
+    return reconstructed_img.astype(np.uint8)
+
+def visualize_encoding(original_img, resized_img, image_data, quantum_state, n_qubits, use_color=False, original_norm=1.0):
+    """
+    Visualize the encoding process - shows original and quantum-reconstructed image.
+    Now actually uses the quantum circuit to reconstruct the image!
+    """
+    fig, axes = plt.subplots(1, 3, figsize=(18, 6))
     
     # Determine colormap
     cmap = None if use_color else 'gray'
     
     # Original image
     axes[0].imshow(original_img, cmap=cmap)
-    axes[0].set_title(f'Original Image\n{original_img.shape[0]}×{original_img.shape[1]} pixels', fontsize=14)
+    axes[0].set_title(f'Original Image\n{original_img.shape[0]}×{original_img.shape[1]} pixels', fontsize=14, fontweight='bold')
     axes[0].axis('off')
     
-    # Resized/encoded image
-    axes[1].imshow(resized_img, cmap=cmap)
+    # Reconstruct image from quantum state
+    reconstructed_img = reconstruct_image_from_quantum_state(
+        quantum_state, 
+        resized_img.shape, 
+        use_color,
+        original_norm
+    )
+    
+    # Show reconstructed image
+    axes[1].imshow(reconstructed_img, cmap=cmap)
     channels_text = 'RGB' if use_color else 'Grayscale'
-    axes[1].set_title(f'Quantum Encoded Image\n{resized_img.shape[0]}×{resized_img.shape[1]} pixels ({n_qubits} qubits)\n{channels_text}', fontsize=14)
+    axes[1].set_title(f'Quantum Reconstructed\n{reconstructed_img.shape[0]}×{reconstructed_img.shape[1]} pixels ({n_qubits} qubits)\n{channels_text}', 
+                     fontsize=14, fontweight='bold', color='green')
     axes[1].axis('off')
     
-    plt.suptitle('Quantum Image Encoding: Before & After', fontsize=16, fontweight='bold')
+    # Calculate and show difference
+    if use_color:
+        # For color images, calculate difference per channel
+        diff = np.abs(resized_img.astype(float) - reconstructed_img.astype(float))
+        diff_normalized = diff / 255.0  # Normalize to [0,1] for visualization
+        axes[2].imshow(diff_normalized)
+    else:
+        # For grayscale
+        diff = np.abs(resized_img.astype(float) - reconstructed_img.astype(float))
+        axes[2].imshow(diff, cmap='hot', vmin=0, vmax=255)
+    
+    # Calculate error metrics
+    mse = np.mean((resized_img.astype(float) - reconstructed_img.astype(float))**2)
+    psnr = 10 * np.log10(255**2 / mse) if mse > 0 else float('inf')
+    
+    axes[2].set_title(f'Difference Map\nMSE: {mse:.2f}, PSNR: {psnr:.2f} dB', fontsize=14, fontweight='bold')
+    axes[2].axis('off')
+    
+    plt.suptitle('Quantum Image Encoding: Original → Quantum Circuit → Reconstructed', 
+                 fontsize=16, fontweight='bold')
     plt.tight_layout()
     plt.show()
-
+    
+    # Print reconstruction quality
+    print(f"\n{'='*70}")
+    print("RECONSTRUCTION QUALITY")
+    print(f"{'='*70}")
+    print(f"Mean Squared Error (MSE): {mse:.4f}")
+    print(f"Peak Signal-to-Noise Ratio (PSNR): {psnr:.2f} dB")
+    if psnr > 40:
+        print("Quality: ✅ EXCELLENT (nearly perfect)")
+    elif psnr > 30:
+        print("Quality: ✅ GOOD (high quality)")
+    elif psnr > 20:
+        print("Quality: ⚠️ FAIR (noticeable differences)")
+    else:
+        print("Quality: ❌ POOR (significant loss)")
+    
+    return reconstructed_img
 
 
 
 if __name__ == "__main__":
+    print("=== Quantum Amplitude Encoding for Images ===\n")
 
     print("\n" + "="*70)
     print("Encoding real image from file...")
@@ -161,5 +274,4 @@ if __name__ == "__main__":
     # Set use_color=True for RGB images, False for grayscale
     use_color = True  # Set to False for grayscale
     
-    circuit, data, state = encode_image_from_file(image_path, target_size, use_color)
-    
+    circuit, data, state, reconstructed = encode_image_from_file(image_path, target_size, use_color)

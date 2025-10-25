@@ -5,7 +5,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
-def load_image(image_path, size=(1024,1024)):
+def load_image(image_path, size=(64,64)):
     """Load an image, resize it, and convert it to a numpy array."""
     try:
         img = Image.open(image_path).convert('RGB')
@@ -44,7 +44,7 @@ def quantum_compression_technique_1(encoded_amplitudes):
     for i in range(num_qubits - 1):
         circuit.h(i)
         circuit.cx(i, i + 1)
-        circuit.z(i + 1)  # Replace RZ gate with Pauli Z gate
+        circuit.z(i + 1)
         circuit.cx(i, i + 1)
         circuit.h(i)
 
@@ -73,7 +73,6 @@ def visualize_images(original_image, encoded_amplitudes, compressed_amplitudes):
     plt.title('Original Image')
     plt.axis('off')
 
-    
 
     plt.subplot(1, 2, 2)
     plt.imshow(compressed_image)

@@ -1,6 +1,10 @@
 # THE BIG HACK 2025
 # 🎬 Quantum Video Compression Simulator
 
+## 🌟PHOTONICS🌟
+**Giovanni Di Stazio**
+**Francesca Morra**
+
 A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages both **Qiskit** and **PennyLane** quantum frameworks to demonstrate quantum information processing on multimedia data.
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
@@ -19,20 +23,15 @@ A quantum computing-based video compression tool that uses **amplitude encoding*
 - **Flexible Resolution**: Supports various frame sizes (recommended: 16×16 to 256×256)
 - **RGB & Grayscale Support**: Works with both color and monochrome videos
 
----
+![image](code/Figure_1.png)
 
 ## 📋 Table of Contents
 
 - [Installation](#-installation)
 - [Quick Start](#-quick-start)
-- [Project Structure](#-project-structure)
 - [How It Works](#-how-it-works)
-- [Usage Examples](#-usage-examples)
 - [API Reference](#-api-reference)
 - [Performance & Limitations](#-performance--limitations)
-- [Contributing](#-contributing)
-- [License](#-license)
-
 ---
 
 ## 🚀 Installation
@@ -60,6 +59,39 @@ A quantum computing-based video compression tool that uses **amplitude encoding*
 ## ⚡ Quick Start
 
 ### Compress a Video
+
+In **code/main.py**:
+
+   ```python
+   video_path = r"./video.mp4"
+
+    #change size to change resolution: size need to be 1x1 proportion and only 2^x numbers allowed
+    frames = video_splitter.load_video_frames(video_path, size=(512,512), max_frames=None, frame_skip=1)
+    #Higher resolutions require more computational power
+    
+   ```
+
+change **name/path** of Video to compress, choose **Resolution** and **Frame Skips**
+
+then (while the virtual environment is active):
+```bash
+cd code
+python main.py
+```
+
+### OUTPUT
+
+- Compressed Video file
+- Compressed Video Details (new size in qubits)
+
+```bash
+✓ Video successfully created: ./compressed_video.mp4
+  Duration: 16.40 seconds
+
+
+video reconstructed: compressed images size = 20 qubits, frames per secon = 25.0, video duration = 16.4s, total frames number = 410;
+ total compressed video size = 8200 qubits
+```
 
 ### Module Descriptions
 

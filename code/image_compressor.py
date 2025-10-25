@@ -83,6 +83,14 @@ def visualize_images(original_image, encoded_amplitudes, compressed_amplitudes):
     plt.savefig('quantum_image_processing_results.png', dpi=300)  # Save high-resolution image
     plt.show()
 
+def visualize_compressed_image(original_image, compressed_amplitudes):
+    compressed_image = reconstruct_image(compressed_amplitudes, original_image.shape)
+    plt.imshow(compressed_image)
+    plt.axis('off')
+    plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+    plt.savefig('quantum_compressed_image.png', dpi=300, bbox_inches='tight', pad_inches=0)
+    plt.show()
+
 def reconstruct_image(amplitudes, original_shape):
     """Reconstruct an image from given amplitudes with improved quality."""
     num_pixels = np.prod(original_shape)

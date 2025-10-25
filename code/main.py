@@ -8,5 +8,6 @@ if __name__ == "__main__":
         circuit, encoded_amplitudes = comp.amplitude_encode(img_array)
         compressed_amplitudes = comp.quantum_compression_technique_1(encoded_amplitudes)
         comp.visualize_images(img_array, encoded_amplitudes, compressed_amplitudes)
+        visualize_compressed_image(img_array, compressed_amplitudes)
     else:
         print("Failed to load image, exiting the program.")

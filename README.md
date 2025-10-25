@@ -19,6 +19,7 @@ A quantum computing-based video compression tool that uses **amplitude encoding*
 - **Flexible Resolution**: Supports various frame sizes (recommended: 16×16 to 256×256)
 - **RGB & Grayscale Support**: Works with both color and monochrome videos
 
+   ![image]("code/figure_1.png")
 ---
 
 ## 📋 Table of Contents

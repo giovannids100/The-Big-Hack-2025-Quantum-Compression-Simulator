@@ -71,9 +71,9 @@ In **code/main.py**:
     
    ```
 
-change **name/path** of Video to compress, choose **Resolution** and **Frame Skips**
+change **name/path** of Video to **compress**, choose **Resolution** and **Frame Skips**
 
-then (while the virtual environment is active):
+then execute the script (while the virtual environment is active):
 ```bash
 cd code
 python main.py

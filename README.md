@@ -1,5 +1,5 @@
 # THE BIG HACK
-# 🎬 Quantum Video Compressor Simulator
+# 🎬 Quantum Video Compression Simulator
 
 A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages both **Qiskit** and **PennyLane** quantum frameworks to demonstrate quantum information processing on multimedia data.
 
@@ -45,10 +45,6 @@ A quantum computing-based video compression tool that uses **amplitude encoding*
 ### Setup
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/quantum-video-compressor.git
-   cd quantum-video-compressor
-   ```
 
 2. **Create virtual environment** (recommended)
    ```bash

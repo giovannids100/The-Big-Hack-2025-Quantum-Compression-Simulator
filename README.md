@@ -127,14 +127,9 @@ The quantum circuit applies transformations:
 - **Pauli-Z Gates (Z)**: Phase manipulation
 - **Rotation Gates (RY)**: Amplitude adjustments
 
-### 3. **Compression Techniques**
+### 3. **Compression Technique**
 
-#### QCT1 (Quantum Compression Technique 1)
-- Threshold-based amplitude selection
-- Keeps only most significant quantum states
-- Configurable compression ratio (default: 75%)
-
-#### QCT2 (Qubit Tracing)
+#### Qubit Tracing
 - Discards least significant qubits
 - Reduces Hilbert space dimensionality
 - True quantum compression via partial trace

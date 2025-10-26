@@ -110,6 +110,8 @@ video reconstructed: compressed images size = 20 qubits, frames per secon = 25.0
 
 ### 1. **Amplitude Encoding**
 
+![circuit](circuit.png)
+
 The system encodes pixel values into quantum state amplitudes:
 
 ```

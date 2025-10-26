@@ -129,7 +129,7 @@ Where `αᵢ` represents normalized pixel values.
 - Reduces Hilbert space dimensionality
 - True quantum compression via partial trace
 
-### 4. **Reconstruction**
+### **Reconstruction**
 
 Quantum states are measured and converted back to pixel values with denormalization and clipping to valid range [0, 255].
 

@@ -108,7 +108,7 @@ video reconstructed: compressed images size = 20 qubits, frames per secon = 25.0
 
 ## 🔬 How It Works
 
-### 1. **Amplitude Encoding**
+### **Amplitude Encoding**
 
 ![circuit](circuit.png)
 
@@ -122,16 +122,7 @@ Where `αᵢ` represents normalized pixel values.
 
 **Example**: A 16×16 RGB image (768 pixels) requires **10 qubits** (2¹⁰ = 1024 states).
 
-### 2. **Quantum Circuit Processing**
-
-The quantum circuit applies transformations:
-
-- **Hadamard Gates (H)**: Create superposition
-- **CNOT Gates (CX)**: Entangle qubits
-- **Pauli-Z Gates (Z)**: Phase manipulation
-- **Rotation Gates (RY)**: Amplitude adjustments
-
-### 3. **Compression Technique**
+### **Compression Technique**
 
 #### Qubit Tracing
 - Discards least significant qubits

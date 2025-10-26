@@ -3,7 +3,7 @@
 
 ![logo](logo.png)
 
-[Project Video (ita)]("https://youtu.be/yO9a2P7oMns?si=JcfUZA1leVIYRS4T")
+[Project Video (ita)](https://youtu.be/yO9a2P7oMns?si=JcfUZA1leVIYRS4T)
 
 ## 🌟PHOTONICS🌟
 **Giovanni Di Stazio**

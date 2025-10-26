@@ -1,6 +1,8 @@
 # THE BIG HACK 2025
 # 🎬 Quantum Video Compression Simulator
 
+![logo](logo.png)
+
 ## 🌟PHOTONICS🌟
 **Giovanni Di Stazio**
 **Francesca Morra**

@@ -7,7 +7,7 @@
 **Giovanni Di Stazio**
 **Francesca Morra**
 
-A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages both **Qiskit** and **PennyLane** quantum frameworks to demonstrate quantum information processing on multimedia data.
+A quantum computing-based video compression tool that uses **amplitude encoding** and **quantum circuits** to compress and reconstruct video files. This project leverages **PennyLane** quantum framework to demonstrate quantum information processing on multimedia data.
 
 ![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
 ![Qiskit](https://img.shields.io/badge/Qiskit-1.0+-purple.svg)
@@ -73,9 +73,9 @@ In **code/main.py**:
     
    ```
 
-change **name/path** of Video to compress, choose **Resolution** and **Frame Skips**
+change **name/path** of Video to **compress**, choose **Resolution** and **Frame Skips**
 
-then (while the virtual environment is active):
+then execute the script (while the virtual environment is active):
 ```bash
 cd code
 python main.py
@@ -129,14 +129,9 @@ The quantum circuit applies transformations:
 - **Pauli-Z Gates (Z)**: Phase manipulation
 - **Rotation Gates (RY)**: Amplitude adjustments
 
-### 3. **Compression Techniques**
+### 3. **Compression Technique**
 
-#### QCT1 (Quantum Compression Technique 1)
-- Threshold-based amplitude selection
-- Keeps only most significant quantum states
-- Configurable compression ratio (default: 75%)
-
-#### QCT2 (Qubit Tracing)
+#### Qubit Tracing
 - Discards least significant qubits
 - Reduces Hilbert space dimensionality
 - True quantum compression via partial trace
